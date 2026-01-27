@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>UC Merced Interactive Maps Hub</title>
+    <meta name="theme-color" content="#ffffff" />
+
+    <meta
+      name="description"
+      content="A UC Merced-themed hub for interactive maps and campus insights, including real-time events, daily crime & fire logs, planned/under-construction projects, and residence halls."
+    />
+    <meta name="robots" content="index,follow" />
+
+    <!-- Canonical URL (recommended) -->
+    <link rel="canonical" href="https://campusmap.ucmercedhub.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="UC Merced Interactive Maps Hub" />
+    <meta
+      property="og:description"
+      content="Explore UC Merced through interactive maps: events, daily crime & fire logs, planned/under-construction projects, and residence halls."
+    />
+    <meta property="og:url" content="https://campusmap.ucmercedhub.com/" />
+
+    <!-- IMPORTANT: must be an absolute, publicly accessible URL -->
+    <meta
+      property="og:image"
+      content="https://campusmap.ucmercedhub.com/images/ucm-maps-preview-2.jpg"
+    />
+    <!-- Optional but helps some scrapers -->
+    <meta
+      property="og:image:secure_url"
+      content="https://campusmap.ucmercedhub.com/images/ucm-maps-preview-2.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="UC Merced Interactive Maps Hub preview image" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UC Merced Interactive Maps Hub" />
+    <meta
+      name="twitter:description"
+      content="Explore UC Merced through interactive maps: events, daily crime & fire logs, planned/under-construction projects, and residence halls."
+    />
+    <meta
+      name="twitter:image"
+      content="https://campusmap.ucmercedhub.com/images/ucm-maps-preview-2.jpg"
+    />
+    <meta property="og:image" content="https://campusmap.ucmercedhub.com/images/ucm-maps-preview-2.jpg">
+    <meta name="twitter:image:alt" content="UC Merced Interactive Maps Hub preview image" />
+
+    <link rel="icon" href="/images/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <style>
+      :root {
+        /* UC Merced palette */
+        --ucm-blue: #005587;
+        --ucm-gold: #ffc72c;
+
+        /* UI tokens */
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --ink: #0f172a;
+        --muted: #475569;
+        --border: #e5e7eb;
+        --shadow: 0 10px 25px rgba(2, 6, 23, 0.08), 0 2px 6px rgba(2, 6, 23, 0.05);
+        --radius: 18px;
+      }
+
+      /* Force light mode in dark schemes (keep the hub visually consistent) */
+      :root {
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        html,
+        body {
+          background: var(--bg) !important;
+          color: var(--ink) !important;
+        }
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+          "Apple Color Emoji", "Segoe UI Emoji";
+        background: radial-gradient(1100px 650px at 85% -220px, rgba(255, 199, 44, 0.14), transparent 60%),
+          radial-gradient(900px 520px at 10% -200px, rgba(0, 85, 135, 0.12), transparent 55%),
+          var(--bg);
+        color: var(--ink);
+        line-height: 1.6;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 max(16px, env(safe-area-inset-left)) 0 max(16px, env(safe-area-inset-right));
+      }
+
+      /* Header */
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(255, 255, 255, 0.9);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: saturate(160%) blur(10px);
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 0;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 900;
+        letter-spacing: 0.2px;
+        color: var(--ucm-blue);
+        font-size: 1.1rem;
+      }
+      .brand .logo {
+        width: 34px;
+        height: 34px;
+        background-image: url("/images/map.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .nav-links a {
+        color: var(--ink);
+        font-weight: 800;
+        padding: 8px 10px;
+        border-radius: 10px;
+        font-size: 0.95rem;
+      }
+      .nav-links a:hover {
+        background: #eef2f7;
+      }
+
+      .focus-ring:focus {
+        outline: 3px solid rgba(0, 85, 135, 0.25);
+        outline-offset: 2px;
+        border-radius: 10px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 900;
+        border-radius: 12px;
+        padding: 10px 16px;
+        border: none;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        transition: transform 0.06s ease, box-shadow 0.15s ease, filter 0.15s ease;
+        white-space: nowrap;
+        font-size: 0.95rem;
+      }
+      .btn-primary {
+        background: var(--ucm-gold);
+        color: #102a43;
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+      }
+      .btn-outline {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        color: var(--ucm-blue);
+        box-shadow: none;
+      }
+      .btn-outline:hover {
+        background: #f8fafc;
+      }
+
+      /* Hero */
+      .hero {
+        margin: 18px 0 16px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        background: linear-gradient(135deg, rgba(0, 85, 135, 0.06), transparent 40%),
+          linear-gradient(45deg, rgba(255, 199, 44, 0.12), transparent 45%),
+          var(--surface);
+        overflow: hidden;
+      }
+
+      .hero-inner {
+        padding: 24px 22px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .hero-topline {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 900;
+        color: var(--ucm-blue);
+        letter-spacing: 0.02em;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 85, 135, 0.18);
+        background: rgba(255, 255, 255, 0.7);
+        color: var(--ucm-blue);
+        font-weight: 900;
+        width: fit-content;
+        font-size: 0.85rem;
+      }
+
+      .hero h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 5vw, 2.4rem);
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        color: #08324e;
+      }
+
+      .hero p {
+        margin: 0;
+        color: var(--muted);
+        max-width: 65ch;
+        font-size: 1.05rem;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 6px;
+      }
+
+      .hero-note {
+        color: var(--muted);
+        font-size: 0.85rem;
+        width: 100%;
+      }
+      @media (min-width: 600px) {
+        .hero-note {
+          width: auto;
+        }
+      }
+
+      /* Sections & Cards */
+      .section {
+        margin: 20px 0;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      /* THEMED CARD SYSTEM
+         - Each card sets:
+           --accent: the primary accent color (for bar + kicker + buttons)
+           --tint-rgb: RGB triplet used for the subtle card wash
+      */
+      .card {
+        --accent: var(--ucm-blue);
+        --tint-rgb: 0, 85, 135;
+
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 22px;
+        display: grid;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.08s ease, border-color 0.15s ease;
+
+        background: linear-gradient(135deg, rgba(var(--tint-rgb), 0.14), transparent 58%),
+          linear-gradient(0deg, rgba(var(--tint-rgb), 0.06), transparent 35%),
+          var(--surface);
+      }
+      .card:hover {
+        transform: translateY(-1px);
+        border-color: rgba(var(--tint-rgb), 0.35);
+      }
+
+      /* Card theme presets (requested: light blue for events, light red for crime, etc.) */
+      .card.theme-events {
+        --accent: #2563eb; /* blue */
+        --tint-rgb: 37, 99, 235;
+      }
+      .card.theme-crime {
+        --accent: #dc2626; /* red */
+        --tint-rgb: 220, 38, 38;
+      }
+      .card.theme-buildings {
+        --accent: #7c3aed; /* violet */
+        --tint-rgb: 124, 58, 237;
+      }
+      .card.theme-housing {
+        --accent: #16a34a; /* green */
+        --tint-rgb: 22, 163, 74;
+      }
+
+      .card .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 900;
+        color: var(--accent);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+      }
+
+      .card h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        letter-spacing: -0.01em;
+        color: #0b2b40;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        max-width: 65ch;
+        font-size: 1rem;
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+
+      .card .accent-bar {
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 6px;
+        background: linear-gradient(180deg, var(--accent), rgba(var(--tint-rgb), 0.35));
+      }
+
+      /* Card-scoped buttons */
+      .btn-card {
+        background: var(--accent);
+        color: #ffffff;
+        box-shadow: none;
+      }
+      .btn-card:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+      }
+
+      .btn-card-outline {
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(var(--tint-rgb), 0.35);
+        color: var(--accent);
+        box-shadow: none;
+      }
+      .btn-card-outline:hover {
+        background: #ffffff;
+      }
+
+      /* Small details badges */
+      .meta {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        width: fit-content;
+      }
+      .meta svg {
+        width: 16px;
+        height: 16px;
+        color: rgba(2, 6, 23, 0.7);
+      }
+
+      /* TEAM GRID / FLIP CARDS CSS */
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-top: 14px;
+      }
+
+      .team-member {
+        background-color: transparent;
+        height: 320px;
+        perspective: 1000px;
+        cursor: pointer;
+      }
+
+      .team-member-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        transform-style: preserve-3d;
+      }
+
+      .team-member.is-flipped .team-member-inner {
+        transform: rotateY(180deg);
+      }
+
+      .team-member-front,
+      .team-member-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      .team-member-front {
+        background: #f8fafc;
+      }
+
+      .member-avatar {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #ffffff;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 12px;
+        display: grid;
+        place-items: center;
+        background: #cbd5e1;
+      }
+
+      .member-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .member-initials {
+        width: 100%;
+        height: 100%;
+        display: none;
+        place-items: center;
+        font-weight: 900;
+        font-size: 1.35rem;
+        letter-spacing: 0.03em;
+        color: #ffffff;
+        background: var(--avatar-bg, #6b7280);
+        text-transform: uppercase;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      .member-avatar.is-fallback .member-photo {
+        display: none;
+      }
+      .member-avatar.is-fallback .member-initials {
+        display: grid;
+      }
+
+      .member-role {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 800;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+
+      .member-name {
+        font-weight: 900;
+        color: var(--ucm-blue);
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+        line-height: 1.2;
+      }
+
+      .member-short-desc {
+        font-size: 0.9rem;
+        color: var(--ink);
+        opacity: 0.8;
+        margin: 0;
+        line-height: 1.4;
+        max-width: 90%;
+      }
+
+      .flip-hint {
+        margin-top: auto;
+        font-size: 0.75rem;
+        color: var(--muted);
+        opacity: 0.6;
+        font-weight: 600;
+        padding-top: 10px;
+      }
+
+      .team-member-back {
+        transform: rotateY(180deg);
+        background: #ffffff;
+        text-align: left;
+        align-items: flex-start;
+        justify-content: flex-start;
+        overflow-y: auto;
+        cursor: pointer;
+      }
+
+      .member-back-title {
+        font-size: 0.85rem;
+        font-weight: 800;
+        color: var(--ucm-blue);
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        border-bottom: 2px solid var(--ucm-gold);
+        padding-bottom: 4px;
+        width: 100%;
+      }
+
+      .member-contributions {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        font-size: 0.9rem;
+        color: var(--muted);
+        line-height: 1.5;
+        user-select: text;
+        -webkit-user-select: text;
+      }
+
+      .member-contributions li {
+        margin-bottom: 8px;
+        padding-left: 14px;
+        position: relative;
+      }
+
+      .member-contributions li::before {
+        content: "•";
+        color: var(--ucm-gold);
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+      }
+
+      /* Footer */
+      footer {
+        border-top: 1px solid var(--border);
+        background: linear-gradient(0deg, #eef2f7, #ffffff);
+        margin-top: 22px;
+      }
+      .ucm-bar {
+        height: 4px;
+        background: linear-gradient(90deg, var(--ucm-blue) 70%, var(--ucm-gold) 30%);
+      }
+      .foot-inner {
+        padding: 24px 0 40px;
+        color: var(--muted);
+        font-size: 0.9rem;
+        text-align: center;
+      }
+      .disclaimer {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        max-width: 60ch;
+        margin: 0 auto;
+        line-height: 1.5;
+      }
+
+      /* Utility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>UC Merced Maps Hub</div>
+        </div>
+
+        <nav class="nav-links" aria-label="Primary">
+          <a class="focus-ring" href="#maps">Maps</a>
+          <a class="focus-ring" href="#about">About</a>
+          <a class="btn btn-primary focus-ring" href="#start">Explore</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero" aria-labelledby="hero-title" id="start">
+        <div class="hero-inner">
+          <div class="hero-topline">
+            <span class="pill">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="16" height="16">
+                <path fill="currentColor" d="M12 2a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V2z" />
+              </svg>
+              Interactive maps
+            </span>
+          </div>
+
+          <h1 id="hero-title">A single place to explore UC Merced—visually.</h1>
+          <p>
+            This hub organizes interactive maps that make campus information easier to discover at a glance.
+            Start with the live events map, browse daily crime &amp; fire logs, review planned/under-construction
+            projects, or explore residence halls with floor plan links and bed timelines.
+          </p>
+
+          <div class="meta" aria-label="Project highlights">
+            <span>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path
+                  fill="currentColor"
+                  d="M12 2l7 4v6c0 5-3 9-7 10C8 21 5 17 5 12V6l7-4zm0 2.3L7 6.7V12c0 3.9 2.2 7.1 5 8 2.8-.9 5-4.1 5-8V6.7l-5-2.4z"
+                />
+              </svg>
+              Clear, campus-focused
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M7 2h10v2H7V2zm-2 6h14v14H5V8zm2 2v10h10V10H7z" />
+              </svg>
+              Mobile-first layout
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M12 3a9 9 0 0 0-9 9h2a7 7 0 1 1 7 7v2a9 9 0 0 0 0-18z" />
+              </svg>
+              Built to scale
+            </span>
+          </div>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary focus-ring" href="#maps">View maps</a>
+            <a class="btn btn-outline focus-ring" href="#about">What is this?</a>
+            <div class="hero-note">Unofficial project; UC Merced colors used for identification.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="maps" aria-labelledby="maps-title">
+        <h2 class="sr-only" id="maps-title">Maps</h2>
+
+        <div class="grid">
+          <!-- Events -->
+          <article class="card theme-events" aria-labelledby="events-title">
+            <div class="accent-bar" aria-hidden="true"></div>
+
+            <div class="kicker">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="18" height="18">
+                <path
+                  fill="currentColor"
+                  d="M7 2h2v2h6V2h2v2h3v18H2V4h5V2zm13 6H4v12h16V8zM6 10h5v5H6v-5z"
+                />
+              </svg>
+              Live view
+            </div>
+
+            <h2 id="events-title">Campus Map + Events</h2>
+            <p>
+              Explore UC Merced on an interactive map and see what’s happening around campus in real time. Designed for
+              quick discovery—tap locations, scan events, and navigate visually.
+            </p>
+
+            <div class="card-actions">
+              <a class="btn btn-card focus-ring" href="/events" aria-label="Open Campus Map and Events">
+                Open events map
+              </a>
+              <a
+                class="btn btn-card-outline focus-ring"
+                href="/events#map"
+                aria-label="Jump to map section in events page"
+              >
+                Details
+              </a>
+            </div>
+          </article>
+
+          <!-- Crime logs -->
+          <article class="card theme-crime" aria-labelledby="crime-title">
+            <div class="accent-bar" aria-hidden="true"></div>
+
+            <div class="kicker">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="18" height="18">
+                <path
+                  fill="currentColor"
+                  d="M12 2l8 4v6c0 5.5-3.5 9.6-8 10-4.5-.4-8-4.5-8-10V6l8-4zm0 2.3L6 6.7V12c0 4.3 2.7 7.4 6 8 3.3-.6 6-3.7 6-8V6.7l-6-2.4z"
+                />
+              </svg>
+              Daily log view
+            </div>
+
+            <h2 id="crime-title">Crime &amp; Fire Logs</h2>
+            <p>
+              Browse the daily crime and fire log view in a cleaner, faster format built for quick scanning and context.
+              Useful for tracking reports over time without digging through PDFs.
+            </p>
+
+            <div class="card-actions">
+              <a class="btn btn-card focus-ring" href="/crimelogs" aria-label="Open Crime and Fire Logs">
+                Open crime logs
+              </a>
+              <a
+                class="btn btn-card-outline focus-ring"
+                href="/crimelogs#map"
+                aria-label="Jump to top section in crime logs page"
+              >
+                Details
+              </a>
+            </div>
+          </article>
+
+          <!-- Planned / under construction buildings -->
+          <article class="card theme-buildings" aria-labelledby="buildings-title">
+            <div class="accent-bar" aria-hidden="true"></div>
+
+            <div class="kicker">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="18" height="18">
+                <path
+                  fill="currentColor"
+                  d="M3 21V3h11v6h7v12H3zm2-2h4V5H5v14zm6 0h3V5h-3v14zm5 0h3V11h-3v8z"
+                />
+              </svg>
+              Projects
+            </div>
+
+            <h2 id="buildings-title">Planned / Under Construction Buildings</h2>
+            <p>
+              View major campus projects with budgets, timelines, delivery method, and source links (Regents + UC Merced
+              planning documents). Built for quick, visual reference.
+            </p>
+
+            <div class="card-actions">
+              <!-- Adjust path if your file lives elsewhere -->
+              <a
+                class="btn btn-card focus-ring"
+                href="/construction"
+                aria-label="Open planned and under construction projects"
+              >
+                Open projects
+              </a>
+              <a
+                class="btn btn-card-outline focus-ring"
+                href="/construction#map"
+                aria-label="Jump to map section in projects page"
+              >
+                Details
+              </a>
+            </div>
+          </article>
+
+          <!-- Housing / residence halls -->
+          <article class="card theme-housing" aria-labelledby="housing-title">
+            <div class="accent-bar" aria-hidden="true"></div>
+
+            <div class="kicker">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="18" height="18">
+                <path
+                  fill="currentColor"
+                  d="M12 3l9 7v11h-6v-7H9v7H3V10l9-7zm0 2.6L5 10v9h2v-7h10v7h2v-9l-7-4.4z"
+                />
+              </svg>
+              Housing
+            </div>
+
+            <h2 id="housing-title">Residence Halls</h2>
+            <p>
+              Explore UC Merced residence halls with photos, key facts, and direct links to floor plans. Includes summary
+              tables and charts for bed growth over time.
+            </p>
+
+            <div class="card-actions">
+              <!-- Adjust path if your file lives elsewhere -->
+              <a class="btn btn-card focus-ring" href="/housing" aria-label="Open residence halls map">
+                Open housing
+              </a>
+              <a
+                class="btn btn-card-outline focus-ring"
+                href="/housing#map"
+                aria-label="Jump to map section in housing page"
+              >
+                Details
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section card" id="about" aria-labelledby="about-title">
+        <div class="accent-bar" aria-hidden="true" style="--accent: var(--ucm-blue); --tint-rgb: 0, 85, 135;"></div>
+        <h2
+          id="about-title"
+          style="margin: 0 0 6px; color: var(--ucm-blue); font-size: 1.1rem; font-weight: 900;"
+        >
+          About this hub
+        </h2>
+        <p style="margin: 0; color: var(--muted); max-width: 75ch;">
+          UC Merced has a lot of useful information spread across different pages and formats. This project aims to make
+          that information easier to explore by organizing it into interactive maps and simple views—so you can
+          understand what’s going on quickly, without digging.
+        </p>
+      </section>
+
+      <section class="section card" id="team" aria-labelledby="team-title">
+        <div class="accent-bar" aria-hidden="true" style="--accent: var(--ucm-gold); --tint-rgb: 255, 199, 44;"></div>
+
+        <h2
+          id="team-title"
+          style="margin: 0 0 6px; color: var(--ucm-blue); font-size: 1.1rem; font-weight: 900;"
+        >
+          Contributors &amp; Collaborators
+        </h2>
+        <p style="margin: 0 0 16px 0; color: var(--muted); max-width: 75ch; font-size: 1rem;">
+          A special thanks to the students and developers making this project possible.
+        </p>
+
+        <div class="team-grid">
+          <div class="team-member" tabindex="0">
+            <div class="team-member-inner">
+              <div class="team-member-front">
+                <div class="member-avatar">
+                  <img
+                    src="/maps/images/people/flavio_herrera.png"
+                    alt="Flavio Herrera"
+                    class="member-photo"
+                    loading="lazy"
+                  />
+                  <div class="member-initials" role="img" aria-label=""></div>
+                </div>
+
+                <span class="member-role">Lead Developer</span>
+                <span class="member-name">Flavio Herrera</span>
+                <p class="member-short-desc">Frontend and Backend</p>
+                <div class="flip-hint">⟳ Tap for details</div>
+              </div>
+              <div class="team-member-back">
+                <div class="member-back-title">Contributions</div>
+                <ul class="member-contributions">
+                  <li>Built interactive map builder</li>
+                  <li>Built Events API + daily crime OCR pipeline</li>
+                  <li>Managed deployment pipelines (local and cloud)</li>
+                </ul>
+                <div class="flip-hint">⟲ Tap to return</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="team-member" tabindex="0">
+            <div class="team-member-inner">
+              <div class="team-member-front">
+                <div class="member-avatar" data-initials-only="true">
+                  <div class="member-initials" role="img" aria-label=""></div>
+                </div>
+
+                <span class="member-role">Contributor</span>
+                <span class="member-name">Alex Jimenez</span>
+                <p class="member-short-desc">Security Engineering</p>
+                <div class="flip-hint">⟳ Tap for details</div>
+              </div>
+              <div class="team-member-back">
+                <div class="member-back-title">Contributions</div>
+                <ul class="member-contributions">
+                  <li>Built honeypot + bot banning system</li>
+                  <li>Security consulting (SSH, Raspberry Pi hosting, injection risks)</li>
+                  <li>Secrets/config review (AWS, caching, env vars)</li>
+                </ul>
+                <div class="flip-hint">⟲ Tap to return</div>
+              </div>
+            </div>
+          </div>
+
+            <div class="team-member" tabindex="0">
+            <div class="team-member-inner">
+              <div class="team-member-front">
+                <div class="member-avatar" data-initials-only="true">
+                  <div class="member-initials" role="img" aria-label=""></div>
+                </div>
+
+                <span class="member-role">Contributor</span>
+                <span class="member-name">Aaron Le</span>
+                <p class="member-short-desc">Social Media Outreach</p>
+                <div class="flip-hint">⟳ Tap for details</div>
+              </div>
+              <div class="team-member-back">
+                <div class="member-back-title">Contributions</div>
+                <ul class="member-contributions">
+                  <li>Post on HITSC offical page on fizz (1.5k up votes)</li>
+                </ul>
+                <div class="flip-hint">⟲ Tap to return</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="ucm-bar"></div>
+      <div class="container foot-inner">
+        <p class="disclaimer">
+          Unofficial project. UC Merced name and colors used for identification only. Map data and embedded content are
+          credited to their respective sources.
+        </p>
+        <p style="margin: 10px 0 0">UC Merced Maps Hub</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // -----------------------------
+        // Flip cards
+        // -----------------------------
+        const members = document.querySelectorAll(".team-member");
+
+        members.forEach((member) => {
+          member.addEventListener("click", () => {
+            member.classList.toggle("is-flipped");
+          });
+
+          member.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              member.classList.toggle("is-flipped");
+            }
+          });
+        });
+
+        // -----------------------------
+        // Avatar initials fallback + stable color
+        // -----------------------------
+        function getInitials(fullName) {
+          const parts = String(fullName || "")
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+
+          if (parts.length === 0) return "?";
+          if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
+
+          const first = parts[0].slice(0, 1);
+          const last = parts[parts.length - 1].slice(0, 1);
+          return (first + last).toUpperCase();
+        }
+
+        function hashToHue(str) {
+          let hash = 0;
+          const s = String(str || "");
+          for (let i = 0; i < s.length; i++) {
+            hash = (hash * 31 + s.charCodeAt(i)) >>> 0;
+          }
+          return hash % 360;
+        }
+
+        document.querySelectorAll(".team-member").forEach((card) => {
+          const nameEl = card.querySelector(".member-name");
+          const avatar = card.querySelector(".member-avatar");
+          const initialsEl = avatar?.querySelector(".member-initials");
+          const img = avatar?.querySelector("img.member-photo");
+
+          if (!avatar || !initialsEl) return;
+
+          const name = (nameEl?.textContent || "").trim();
+          const initials = getInitials(name);
+
+          initialsEl.textContent = initials;
+          initialsEl.setAttribute("aria-label", `Avatar for ${name}`);
+
+          const hue = hashToHue(name);
+          avatar.style.setProperty("--avatar-bg", `hsl(${hue} 55% 45%)`);
+
+          if (avatar.dataset.initialsOnly === "true") {
+            avatar.classList.add("is-fallback");
+            return;
+          }
+
+          if (!img || !img.getAttribute("src")) {
+            avatar.classList.add("is-fallback");
+            return;
+          }
+
+          img.addEventListener("error", () => {
+            avatar.classList.add("is-fallback");
+          });
+
+          img.addEventListener("load", () => {
+            avatar.classList.remove("is-fallback");
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

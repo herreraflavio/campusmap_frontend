@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>UC Merced Daily Crime & Fire Log Map</title>
+
+    <!-- A darker, “crime log” forward theme color (mobile browser UI) -->
+    <meta name="theme-color" content="#7f1d1d" />
+
+    <meta
+      name="description"
+      content="An unofficial, map-based viewer for UC Merced Daily Crime & Fire Log entries, updated as new logs are posted."
+    />
+    <link rel="canonical" href="https://ucmercedhub.com/crime-log" />
+    <meta name="robots" content="index,follow" />
+
+    <meta property="og:site_name" content="UC Merced Crime & Fire Log Map" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta property="og:image" content="https://ucmercedhub.com/og-map-image.jpg" />
+    <meta property="og:image:secure_url" content="https://ucmercedhub.com/og-map-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <meta name="twitter:site" content="@UCMcampusmap" />
+    <meta name="twitter:creator" content="@UCMcampusmap" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ucmercedhub.com/crime-log" />
+    <meta property="og:title" content="UC Merced Daily Crime & Fire Log Map" />
+    <meta
+      property="og:description"
+      content="Map-based view of Daily Crime & Fire Log entries as posted by UC Merced Police."
+    />
+    <meta property="og:image:alt" content="UC Merced Daily Crime & Fire Log Map Interface" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UC Merced Daily Crime & Fire Log Map" />
+    <meta
+      name="twitter:description"
+      content="Map-based view of Daily Crime & Fire Log entries as posted by UC Merced Police."
+    />
+    <meta name="twitter:image" content="https://ucmercedhub.com/og-map-image.jpg" />
+
+    <link rel="icon" href="/maps/images/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Light mode only -->
+    <style>
+      :root {
+        /* UC Merced palette (kept for identity) */
+        --ucm-blue: #005587;
+        --ucm-gold: #ffc72c;
+
+        /* Crime-log accent */
+        --alert: #b91c1c;        /* primary accent */
+        --alert-dark: #7f1d1d;   /* deeper accent */
+        --alert-soft: rgba(185, 28, 28, 0.12);
+
+        /* UI tokens */
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --ink: #111827;
+        --muted: #4b5563;
+        --border: #e5e7eb;
+        --shadow: 0 10px 25px rgba(2, 6, 23, 0.08),
+          0 2px 6px rgba(2, 6, 23, 0.05);
+      }
+
+      /* Force light even if user prefers dark */
+      :root {
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        html,
+        body {
+          background: var(--bg) !important;
+          color: var(--ink) !important;
+        }
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        background: radial-gradient(
+            1000px 700px at 85% -200px,
+            var(--alert-soft),
+            transparent 60%
+          ),
+          var(--bg);
+        color: var(--ink);
+        line-height: 1.55;
+      }
+      a {
+        color: var(--ucm-blue);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 max(16px, env(safe-area-inset-left)) 0
+          max(16px, env(safe-area-inset-right));
+      }
+
+      /* Header (mobile-first, centered) */
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: saturate(160%) blur(8px);
+      }
+      .nav {
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 10px;
+        align-items: center;
+        padding: 14px 0;
+        text-align: center;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        color: var(--alert-dark);
+      }
+      .brand .logo {
+        width: 32px;
+        height: 32px;
+        background-image: url("/maps/images/fullscreen_icons/map.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      .nav-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-home svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+
+      .nav-links {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .nav-links a {
+        color: var(--ink);
+        font-weight: 700;
+        padding: 8px 10px;
+        border-radius: 8px;
+      }
+      .nav-links a:hover {
+        background: #eef2f7;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 800;
+        border-radius: 12px;
+        padding: 10px 14px;
+        border: none;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        transition: transform 0.06s ease, box-shadow 0.15s ease;
+      }
+      .btn-primary {
+        background: var(--alert);
+        color: #ffffff;
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+      }
+      .btn-outline {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        color: var(--alert-dark);
+      }
+      @media (min-width: 860px) {
+        .nav {
+          grid-template-columns: 1fr auto;
+          justify-items: stretch;
+          text-align: left;
+          padding: 16px;
+        }
+        .nav-links {
+          justify-content: flex-end;
+          gap: 14px;
+        }
+      }
+
+      /* Hero */
+      .hero {
+        margin: 18px 0 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+      }
+      .hero-inner {
+        padding: 22px;
+        display: grid;
+        gap: 10px;
+        text-align: center;
+      }
+      .hero h1 {
+        margin: 0;
+        font-size: clamp(1.25rem, 3.5vw, 1.9rem);
+        color: var(--alert-dark);
+      }
+      .hero p {
+        margin: 0;
+        color: var(--muted);
+      }
+      .hero-callout {
+        margin-top: 8px;
+        display: inline-flex;
+        justify-content: center;
+      }
+      .notice {
+        border: 1px solid rgba(185, 28, 28, 0.25);
+        background: rgba(185, 28, 28, 0.06);
+        color: #7f1d1d;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-weight: 700;
+        max-width: 70ch;
+      }
+
+      /* Map embed */
+      .map-section {
+        margin: 16px 0;
+      }
+
+      .map-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+
+        display: flex;
+        flex-direction: column;
+      }
+
+      .map-header {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        position: relative;
+      }
+      .map-title {
+        font-weight: 900;
+        color: var(--alert-dark);
+      }
+      .map-embed {
+        width: 100%;
+        border: 0;
+        display: block;
+        flex: 1;
+        min-height: clamp(320px, 60vh, 680px);
+      }
+      @media (min-width: 900px) {
+        .map-header {
+          flex-direction: row;
+          justify-content: space-between;
+          text-align: left;
+        }
+      }
+
+      /* ---------- FULLSCREEN MODE ---------- */
+
+      body.fullscreen-open {
+        overflow: hidden;
+      }
+
+      .map-section.fullscreen {
+        position: fixed;
+        inset: 0;
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 999;
+        background: var(--surface);
+      }
+
+      .map-section.fullscreen .map-card {
+        height: 100%;
+        border-radius: 0;
+      }
+
+      .map-section.fullscreen .map-embed {
+        min-height: 0;
+        flex: 1;
+      }
+
+      /* Info sections */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+        margin-bottom: 16px;
+      }
+      .card h2 {
+        margin: 0 0 6px;
+        font-size: 1.06rem;
+        color: var(--alert-dark);
+        text-align: center;
+      }
+      .card p,
+      .card ul,
+      .card ol {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 65ch;
+      }
+      .list {
+        padding-left: 1.1rem;
+        margin: 0.2rem 0 0;
+      }
+
+      /* Contact card tweaks */
+      #contact.card {
+        text-align: center;
+      }
+
+      /* Footer */
+      footer {
+        border-top: 1px solid var(--border);
+        background: linear-gradient(0deg, #eef2f7, #ffffff);
+      }
+      .foot-inner {
+        padding: 18px 0 36px;
+        color: var(--muted);
+        font-size: 0.95rem;
+        text-align: center;
+      }
+      .disclaimer {
+        font-size: 0.85rem;
+        opacity: 0.9;
+      }
+      .ucm-bar {
+        height: 4px;
+        background: linear-gradient(90deg, var(--alert-dark) 55%, var(--ucm-blue) 45%);
+      }
+
+      /* Accessibility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .focus-ring:focus {
+        outline: 3px solid rgba(185, 28, 28, 0.25);
+        outline-offset: 2px;
+        border-radius: 10px;
+      }
+
+      .full_screen_icon {
+        width: 18px;
+        height: 18px;
+        display: block;
+        margin-left: 8px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>UC Merced Crime & Fire Log Map</div>
+        </div>
+        <nav class="nav-links" aria-label="Primary">
+            <a href="/" class="nav-home focus-ring" aria-label="Home">
+    <!-- inline home icon -->
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"
+      />
+    </svg>
+    Home
+  </a>
+          <a href="#map-scroll-too">Map</a>
+          <a href="#about">About</a>
+          <a href="#source">Source</a>
+          <a href="#contact" class="btn btn-primary">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Hero -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div id="map-scroll-too"></div>
+          <h1 id="hero-title">Daily Crime & Fire Log — map view</h1>
+          <p>
+            Unofficial viewer for Daily Crime &amp; Fire Log entries, updated as new logs are posted.
+          </p>
+
+          <div class="hero-callout">
+            <div class="notice" role="note" aria-label="Emergency notice">
+              If this is an emergency, call <strong>911</strong>. For non-emergency assistance, contact UC Merced Police.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Map embed -->
+      <section id="map" class="map-section" aria-labelledby="map-title">
+        <div class="map-card">
+          <div class="map-header">
+            <div class="map-title" id="map-title">UC Merced Daily Crime &amp; Fire Log Map</div>
+
+            <div style="display: flex; align-items: center">
+              <div style="color: var(--muted); font-size: 0.9rem">
+                Pinch/Scroll to Zoom • Drag to Pan • Full Screen
+              </div>
+
+              <img
+                src="/maps/images/fullscreen_icons/full_screen.png"
+                id="full_screen_icon"
+                class="full_screen_icon"
+                onclick="fullScreen()"
+                alt="Toggle fullscreen"
+              />
+            </div>
+          </div>
+
+          <!-- Keep your existing map share URL, just retitled for the crime-log use case -->
+          <iframe
+            class="map-embed"
+            id="map-iframe"
+            title="Embedded UC Merced Daily Crime & Fire Log map"
+            src="https://mapbuilder.ucmercedhub.com/share/696607536931dc7bf299e17d"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="card" id="about" aria-labelledby="about-title">
+        <h2 id="about-title">About this site</h2>
+        <p>
+          This page is an <strong>unofficial</strong>, map-based view of UC Merced Daily Crime &amp; Fire Log entries.
+          It is intended to make it easier to browse what has been reported and posted, at a glance.
+        </p>
+        <ul class="list">
+          <li>Focused on crime and fire-log entries (not events).</li>
+          <li>Designed to update as new daily logs are posted by UC Merced.</li>
+          <li>For authoritative details, always refer to the official sources below.</li>
+        </ul>
+      </section>
+
+      <!-- Source -->
+      <section class="card" id="source" aria-labelledby="source-title">
+        <h2 id="source-title">Source</h2>
+        <p>
+          Primary source: UC Merced Police Department Daily Crime &amp; Fire Log page.
+        </p>
+        <ul class="list">
+          <li>
+            <a
+              class="focus-ring"
+              href="https://police.ucmerced.edu/safety-infovictim-services/daily-crime-fire-log"
+              target="_blank"
+              rel="noopener noreferrer"
+              >UC Merced Police — Daily Crime &amp; Fire Log</a
+            >
+          </li>
+        </ul>
+        <p style="margin-top: 10px">
+          The Daily Crime &amp; Fire Log is maintained under Clery Act-related reporting and includes reported incidents
+          and fires in student housing, as applicable.
+        </p>
+      </section>
+
+      <!-- Contact -->
+      <section id="contact" class="card" aria-labelledby="contact-title">
+        <h2 id="contact-title">Contact</h2>
+        <p style="text-align: center; max-width: 60ch; margin: 0 auto 6px">
+          Questions, corrections, or takedown requests? Reach me below.
+        </p>
+        <p style="text-align: center">
+          <strong>Email:</strong> MapUCMerced@ucmerced.edu
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="ucm-bar"></div>
+      <div class="container foot-inner">
+        <p class="disclaimer">
+          Unofficial project. UC Merced name and colors used for identification only.
+        </p>
+        <p>
+          Made by MapUCMerced • Refer to UC Merced Police for the official Daily Crime &amp; Fire Log.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      let isInFullScreen = false;
+
+      function fullScreen() {
+        const mapSection = document.getElementById("map");
+        const icon = document.getElementById("full_screen_icon");
+        const anchor = document.getElementById("map-scroll-too");
+
+        isInFullScreen = !isInFullScreen;
+
+        if (isInFullScreen) {
+          mapSection.classList.add("fullscreen");
+          document.body.classList.add("fullscreen-open");
+          icon.src = "/maps/images/fullscreen_icons/exit_full_screen.png";
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        } else {
+          mapSection.classList.remove("fullscreen");
+          document.body.classList.remove("fullscreen-open");
+          icon.src = "/maps/images/fullscreen_icons/full_screen.png";
+          if (anchor) anchor.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    </script>
+  </body>
+</html>

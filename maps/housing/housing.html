@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UC Merced Residence Halls</title>
+    <style>
+      :root {
+        --ucm-blue: #005587;
+        --ucm-gold: #ffc72c;
+        --text-dark: #333;
+        --bg-light: #f9f9f9;
+      }
+      @media (prefers-color-scheme: dark) {
+        html,
+        body {
+          background: var(--bg-light) !important;
+          color: var(--text-dark) !important;
+        }
+        nav {
+          background: var(--ucm-blue) !important;
+        }
+        nav a,
+        a {
+          color: var(--ucm-gold) !important;
+        }
+        section,
+        .hall {
+          background: white !important;
+        }
+        .summary-table th {
+          background: var(--ucm-blue) !important;
+          color: white !important;
+        }
+        footer {
+          background: var(--ucm-blue) !important;
+          color: white !important;
+        }
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: var(--text-dark);
+        background: var(--bg-light);
+        line-height: 1.6;
+      }
+      nav {
+        position: sticky;
+        top: 0;
+        background: var(--ucm-blue);
+        padding: 10px;
+        z-index: 1000;
+        /* Flex layout to center the menu items */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+      nav a {
+        color: var(--ucm-gold);
+        text-decoration: none;
+        font-weight: bold;
+        padding: 8px 12px;
+        /* Flexbox to align icon and text */
+        display: flex;
+        align-items: center;
+        gap: 6px; /* Space between icon and text */
+      }
+      nav a:hover {
+        text-decoration: underline;
+      }
+      /* Home Icon Style */
+      .home-icon {
+        width: 18px; /* Slightly smaller to match text height */
+        height: 18px;
+        display: block;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+      }
+      .hall {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .slideshow {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/9;
+        overflow: hidden;
+        border-radius: 8px;
+        margin-bottom: 1em;
+      }
+      .slideshow img,
+      .slideshow a {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: none;
+        text-decoration: none;
+        color: var(--ucm-blue);
+        font-size: 1.2em;
+        align-items: center;
+        justify-content: center;
+      }
+      .slideshow img.active,
+      .slideshow a.active {
+        display: flex;
+      }
+      .slide-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 2em;
+        padding: 0 10px;
+        cursor: pointer;
+        z-index: 10;
+        line-height: 1;
+      }
+      .slide-btn.left {
+        left: 5px;
+      }
+      .slide-btn.right {
+        right: 5px;
+      }
+      h2 {
+        color: var(--ucm-blue);
+        margin-top: 0;
+      }
+      ul {
+        padding-left: 1.2em;
+        margin: 0.5em 0;
+      }
+      li {
+        margin-bottom: 0.3em;
+      }
+      .map-container {
+        margin-bottom: 60px;
+      }
+      .map-container iframe {
+        width: 100%;
+        min-width: 350px;
+        min-height: 525px;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .summary {
+        margin: 60px 0;
+        text-align: center;
+      }
+      .table-wrapper {
+        overflow-x: auto;
+      }
+      .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1em;
+      }
+      .summary-table th,
+      .summary-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+      .summary-table th {
+        background: var(--ucm-blue);
+        color: white;
+      }
+      footer {
+        background: var(--ucm-blue);
+        color: white;
+        text-align: center;
+        padding: 20px;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li>
+          <a href="/">
+            <img
+              src="/maps/images/map.png"
+              alt=""
+              class="home-icon"
+            />
+            Home
+          </a>
+        </li>
+        <li><a href="#valley-terraces">Valley Terraces</a></li>
+        <li><a href="#sierra-terraces">Sierra Terraces</a></li>
+        <li><a href="#cathedral">Cathedral &amp; Tenaya</a></li>
+        <li><a href="#half-dome">Half Dome</a></li>
+        <li><a href="#granite-pass">Granite Pass</a></li>
+        <li><a href="#glacier-point">Glacier Point</a></li>
+        <li><a href="#el-portal">El Portal</a></li>
+        <li><a href="#sentinel-rock">Sentinel Rock</a></li>
+      </ul>
+    </nav>
+    <div class="container">
+      <section id="map" class="map-container">
+        <h2>Campus Map</h2>
+        <iframe
+          src="https://mapbuilder.ucmercedhub.com/share/69616805c0f2cb67ff394cd0"
+          allowfullscreen
+        ></iframe>
+      </section>
+      <div class="projects-grid">
+        <section id="valley-terraces" class="hall">
+          <h2>Valley Terraces</h2>
+          <div class="slideshow" data-id="valley-terraces"></div>
+          <p>
+            Opened Fall 2005; nine two-story suite buildings for continuing
+            students, ~600 beds.
+          </p>
+          <h3>Sources</h3>
+          <ul>
+            <li>
+              <a href="https://housing.ucmerced.edu/housing/valley-terraces"
+                >Housing page</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/documents/valley_bedroom_floorplan.pdf"
+                >Floor plan PDF</a
+              >
+            </li>
+          </ul>
+        </section>
+        <section id="sierra-terraces" class="hall">
+          <h2>Sierra Terraces (Mariposa &amp; Tuolumne)</h2>
+          <div class="slideshow" data-id="sierra-terraces"></div>
+          <p>
+            Tuolumne opened Fall 2007 and Mariposa Fall 2008; suite-style for
+            freshmen, ~400 beds total.
+          </p>
+          <h3>Sources</h3>
+          <ul>
+            <li>
+              <a href="https://housing.ucmerced.edu/housing/sierra-terraces"
+                >Housing page</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/page/documents/tuolumne_floorplan.pdf"
+                >Tuolumne floor plan</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/page/documents/mariposa_floorplan.pdf"
+                >Mariposa floor plan</a
+              >
+            </li>
+          </ul>
+        </section>
+        <section id="cathedral" class="hall">
+          <h2>Cathedral &amp; Tenaya Halls</h2>
+          <div class="slideshow" data-id="cathedral"></div>
+          <p>
+            Opened Fall 2010; corridor-style halls for freshmen, ~600 beds
+            combined.
+          </p>
+          <h3>Sources</h3>
+          <ul>
+            <li>
+              <a
+                href="https://dc.ucmerced.edu/projects/auxiliary-buildings/cathedral-and-tenaya-halls"
+                >Project page</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/documents/updated_the_summits_bedroom_floorplan.pdf"
+                >Floor plan PDF</a
+              >
+            </li>
+          </ul>
+        </section>
+        <section id="half-dome" class="hall">
+          <h2>Half Dome Hall</h2>
+          <div class="slideshow" data-id="half-dome"></div>
+          <p>
+            Opened Fall 2013; five-story, traditional corridor layout, ~530
+            beds.
+          </p>
+          <h3>Sources</h3>
+          <ul>
+            <li>
+              <a
+                href="https://dc.ucmerced.edu/projects/auxiliary-buildings/half-dome-student-residences"
+                >Project page</a
+              >
+            </li>
+          </ul>
+        </section>
+        <section id="granite-pass" class="hall">
+          <h2>Granite Pass Hall</h2>
+          <div class="slideshow" data-id="granite-pass"></div>
+          <p>Opened Fall 2018; four-story layout, ~430 beds.</p>
+          <h3>Sources</h3>
+          <ul>
+            <li>
+              <a
+                href="https://dc.ucmerced.edu/projects/auxiliary-buildings/granite-pass-residence-hall"
+                >Project page</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/documents/granite_pass_fourth_floor.pdf"
+                >Floor plan PDF</a
+              >
+            </li>
+          </ul>
+        </section>
+        <section id="glacier-point" class="hall">
+          <h2>Glacier Point Hall</h2>
+          <div class="slideshow" data-id="glacier-point"></div>
+          <p>Opened Fall 2018; ~800 beds with academic/social spaces.</p>
+          <h3>Sources</h3>
+          <ul>
+            <li>
+              <a
+                href="https://dc.ucmerced.edu/projects/auxiliary-buildings/glacier-point-residence-hall"
+                >Project page</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/documents/glacier_point_sixth_floor.pdf"
+                >Floor plan PDF</a
+              >
+            </li>
+          </ul>
+        </section>
+        <section id="el-portal" class="hall">
+          <h2>El Portal Hall</h2>
+          <div class="slideshow" data-id="el-portal"></div>
+          <p>Opened Fall 2021; ~600 beds, modern mixed-use design.</p>
+          <h3>Sources</h3>
+          <ul>
+            <li>
+              <a
+                href="https://dc.ucmerced.edu/projects/auxiliary-buildings/el-portal-residence-hall"
+                >Project page</a
+              >
+            </li>
+          </ul>
+        </section>
+        <section id="sentinel-rock" class="hall">
+          <h2>Sentinel Rock Hall</h2>
+          <div class="slideshow" data-id="sentinel-rock"></div>
+          <p>
+            Opened Fall 2021; ~600 beds, five-story suite/quadrangle design.
+          </p>
+          <h3>Sources</h3>
+          <ul>
+            <li>
+              <a
+                href="https://dc.ucmerced.edu/projects/auxiliary-buildings/sentinel-rock"
+                >Project page</a
+              >
+            </li>
+          </ul>
+        </section>
+      </div>
+      <section class="summary">
+        <h2>Summary &amp; Charts</h2>
+        <div class="table-wrapper">
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th>Hall</th>
+                <th>Opened</th>
+                <th>Beds</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Valley Terraces</td>
+                <td>2005</td>
+                <td>600</td>
+              </tr>
+              <tr>
+                <td>Tuolumne</td>
+                <td>2007</td>
+                <td>200</td>
+              </tr>
+              <tr>
+                <td>Mariposa</td>
+                <td>2008</td>
+                <td>200</td>
+              </tr>
+              <tr>
+                <td>Cathedral</td>
+                <td>2010</td>
+                <td>300</td>
+              </tr>
+              <tr>
+                <td>Tenaya</td>
+                <td>2010</td>
+                <td>300</td>
+              </tr>
+              <tr>
+                <td>Half Dome</td>
+                <td>2013</td>
+                <td>530</td>
+              </tr>
+              <tr>
+                <td>Granite Pass</td>
+                <td>2018</td>
+                <td>430</td>
+              </tr>
+              <tr>
+                <td>Glacier Point</td>
+                <td>2018</td>
+                <td>800</td>
+              </tr>
+              <tr>
+                <td>El Portal</td>
+                <td>2021</td>
+                <td>600</td>
+              </tr>
+              <tr>
+                <td>Sentinel Rock</td>
+                <td>2021</td>
+                <td>600</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <canvas id="bedsHistogram" width="800" height="400"></canvas>
+        <canvas id="aggregatedBedsChart" width="800" height="400"></canvas>
+      </section>
+    </div>
+    <footer>
+      <p>
+        Data sources: UC Merced Housing & Residence Education; UC Merced
+        Planning, Design & Construction
+      </p>
+      <p>Contact: (209) 228-4400</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Slide data
+      const slides = {
+        "valley-terraces": [
+          {
+            src: "https://housing.ucmerced.edu/sites/housing.ucmerced.edu/files/page/images/villages.jpg",
+          },
+          {
+            src: "https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/documents/valley_bedroom_floorplan.pdf",
+            isLink: true,
+            text: "View Floor Plan",
+          },
+        ],
+        "sierra-terraces": [
+          {
+            src: "https://housing.ucmerced.edu/sites/housing.ucmerced.edu/files/page/images/sierra_terraces.jpg",
+          },
+          {
+            src: "https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/page/documents/tuolumne_floorplan.pdf",
+            isLink: true,
+            text: "Tuolumne Floor Plan",
+          },
+          {
+            src: "https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/page/documents/mariposa_floorplan.pdf",
+            isLink: true,
+            text: "Mariposa Floor Plan",
+          },
+        ],
+        cathedral: [
+          {
+            src: "https://dc.ucmerced.edu/sites/dc.ucmerced.edu/files/page/images/h3.jpg",
+          },
+          {
+            src: "https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/documents/updated_the_summits_bedroom_floorplan.pdf",
+            isLink: true,
+            text: "Summits Floor Plan",
+          },
+        ],
+        "half-dome": [
+          {
+            src: "https://dc.ucmerced.edu/sites/dc.ucmerced.edu/files/page/images/h4complete.jpg",
+          },
+        ],
+        "granite-pass": [
+          {
+            src: "https://dc.ucmerced.edu/sites/dc.ucmerced.edu/files/page/images/granite_pass_dorm_180831-10.jpeg",
+          },
+          {
+            src: "https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/documents/granite_pass_fourth_floor.pdf",
+            isLink: true,
+            text: "4th Floor Plan",
+          },
+        ],
+        "glacier-point": [
+          {
+            src: "https://dc.ucmerced.edu/sites/dc.ucmerced.edu/files/page/images/glacier_point_bldg_200610-2_1.jpeg",
+          },
+          {
+            src: "https://housing.ucmerced.edu/sites/g/files/ufvvjh1041/f/documents/glacier_point_sixth_floor.pdf",
+            isLink: true,
+            text: "6th Floor Plan",
+          },
+        ],
+        "el-portal": [
+          {
+            src: "https://dc.ucmerced.edu/sites/dc.ucmerced.edu/files/page/images/el_portal_200814-1.jpeg",
+          },
+        ],
+        "sentinel-rock": [
+          {
+            src: "https://dc.ucmerced.edu/sites/dc.ucmerced.edu/files/page/images/img_3082.jpg",
+          },
+        ],
+      };
+      function createSlideshow(id, items) {
+        const container = document.querySelector(`.slideshow[data-id="${id}"]`);
+        let idx = 0;
+        const elems = items.map((item, i) => {
+          const el = item.isLink
+            ? Object.assign(document.createElement("a"), {
+                href: item.src,
+                textContent: item.text,
+                target: "_blank",
+              })
+            : Object.assign(document.createElement("img"), { src: item.src });
+          if (i === 0) el.classList.add("active");
+          container.appendChild(el);
+          return el;
+        });
+        ["left", "right"].forEach((dir) => {
+          const btn = Object.assign(document.createElement("button"), {
+            className: `slide-btn ${dir}`,
+            textContent: dir === "left" ? "‹" : "›",
+          });
+          btn.onclick = () => {
+            elems[idx].classList.remove("active");
+            idx =
+              dir === "left"
+                ? (idx - 1 + elems.length) % elems.length
+                : (idx + 1) % elems.length;
+            elems[idx].classList.add("active");
+          };
+          container.appendChild(btn);
+        });
+      }
+      Object.entries(slides).forEach(([id, items]) =>
+        createSlideshow(id, items)
+      );
+      // Chart data
+      const years = [
+        2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
+        2017, 2018, 2019, 2020, 2021,
+      ];
+      const newBeds = {
+        2005: 600,
+        2006: 0,
+        2007: 400,
+        2008: 0,
+        2009: 0,
+        2010: 600,
+        2011: 0,
+        2012: 0,
+        2013: 500,
+        2014: 0,
+        2015: 0,
+        2016: 0,
+        2017: 0,
+        2018: 1230,
+        2019: 0,
+        2020: 1200,
+        2021: 0,
+      };
+      const cumulative = [];
+      years.forEach((y, i) => {
+        cumulative[i] = (cumulative[i - 1] || 0) + (newBeds[y] || 0);
+      });
+      // New beds bar chart
+      new Chart(document.getElementById("bedsHistogram").getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: years.map((y) => y.toString()),
+          datasets: [
+            { label: "New Beds", data: years.map((y) => newBeds[y] || 0) },
+          ],
+        },
+        options: {
+          scales: {
+            x: { title: { display: true, text: "Academic Year (Fall)" } },
+            y: { title: { display: true, text: "New Beds" } },
+          },
+        },
+      });
+      // Cumulative beds line chart
+      new Chart(
+        document.getElementById("aggregatedBedsChart").getContext("2d"),
+        {
+          type: "line",
+          data: {
+            labels: years.map((y) => y.toString()),
+            datasets: [
+              {
+                label: "Cumulative Beds",
+                data: cumulative,
+                fill: false,
+                borderColor: "var(--ucm-blue)",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: { title: { display: true, text: "Academic Year (Fall)" } },
+              y: { title: { display: true, text: "Total Beds" } },
+            },
+          },
+        }
+      );
+    </script>
+  </body>
+</html>
