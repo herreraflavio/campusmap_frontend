@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - UC Merced Hub</title>
+    <style>
+        :root {
+            /* UC Merced Inspired Colors */
+            --primary-blue: #002855;
+            --primary-gold: #DAA900;
+            --secondary-blue: #004B87;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f3f4f6;
+            --white: #ffffff;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            background-color: var(--white);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary-blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- Main Content --- */
+        main {
+            flex: 1;
+            padding: 3rem 5%;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* --- Quick Links Grid --- */
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+            margin-top: -2rem; /* Overlap hero slightly */
+        }
+
+        .support-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
+            border-top: 4px solid transparent;
+        }
+
+        .support-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--primary-gold);
+        }
+
+        .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-blue);
+        }
+
+        .card-desc {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* --- FAQ Section --- */
+        .faq-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-blue);
+        }
+
+        .faq-item {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .faq-question:hover {
+            background-color: #f9fafb;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            padding-bottom: 1.5rem;
+            max-height: 500px; /* Arbitrary large height */
+        }
+
+        .faq-toggle {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--white);
+            padding: 3rem 5%;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            margin-top: auto;
+        }
+
+        .social-links {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .footer-text {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .support-grid { margin-top: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="https://campusmap.ucmercedhub.com" class="nav-logo">
+            📍 UC Merced Hub
+        </a>
+        <div class="nav-links">
+            <a href="https://campusmap.ucmercedhub.com/events">Map</a>
+            <a href="#">Support</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>How can we help?</h1>
+        <p>Find answers, report issues, or get in touch with the development team.</p>
+    </section>
+
+    <main>
+        <div class="support-grid">
+            <a href="https://discord.gg/zuXadbnRH4" target="_blank" class="support-card">
+                <span class="icon">💬</span>
+                <div class="card-title">Join the Discord</div>
+                <div class="card-desc">Chat with the community, report bugs in real-time, and get quick help.</div>
+            </a>
+
+            <a href="https://x.com/mapucmerced" target="_blank" class="support-card">
+                <span class="icon">🐦</span>
+                <div class="card-title">Follow on X</div>
+                <div class="card-desc">Get the latest updates, maintenance alerts, and feature announcements.</div>
+            </a>
+
+            <a href="mailto:contact@ucmercedhub.com" class="support-card">
+                <span class="icon">✉️</span>
+                <div class="card-title">Email Us</div>
+                <div class="card-desc">For detailed inquiries or partnership proposals.</div>
+            </a>
+        </div>
+
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Is this an official UC Merced app?
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    No. The UC Merced Events Map is a student-led project designed to help the campus community. We are not officially affiliated with the University of California, Merced administration.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How do I get my club's event on the map?
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Currently, we aggregate public events from various campus sources. If you want to ensure your club's event is featured, please join our <a href="https://discord.gg/zuXadbnRH4">Discord server</a> and post in the requests channel, or DM us on Instagram.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    I found a bug or a map error.
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    We appreciate your help! The fastest way to report a bug is via our Discord server in the #bug-reports channel. You can also message us on X (Twitter) or Instagram.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Is there a mobile app available?
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Yes! We are currently working on an iOS application that will be available on the App Store soon. It will feature the interactive events map and walking directions.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://x.com/mapucmerced" target="_blank">Twitter / X</a>
+            <a href="https://www.instagram.com/mapucmerced/" target="_blank">Instagram</a>
+            <a href="https://github.com/herreraflavio/campusmap_frontend" target="_blank">GitHub</a>
+            <a href="https://discord.gg/zuXadbnRH4" target="_blank">Discord</a>
+        </div>
+        <p class="footer-text">
+            &copy; 2026 UC Merced Hub. All rights reserved.<br>
+            This website is a student project and is not affiliated with UC Merced.
+        </p>
+    </footer>
+
+    <script>
+        // Simple Vanilla JS for Accordion Functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', () => {
+                    // Toggle current item
+                    item.classList.toggle('active');
+
+                    // Optional: Close other items (Accordion style)
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
