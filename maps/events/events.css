@@ -57,3 +57,53 @@
 .sidemenu-nav a:active {
   background: rgba(0, 0, 0, 0.12);
 }
+
+@media (max-width: 47em) {
+  .sidemenu {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 40vh;
+
+    background: rgba(255, 255, 255, 0.323);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 5px 30px rgba(0,0,0,0.15);
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: column;
+
+    transform: translateY(70vh);
+
+    overflow: hidden;
+  }
+
+  /* Drag handle */
+  .sidemenu::before {
+    content: "";
+    width: 40px;
+    height: 5px;
+    background: #424242;
+    border-radius: 10px;
+    margin: 10px auto;
+  }
+
+  .sidemenu.active {
+    transform: translateY(0);
+  }
+
+  .sidemenu-head {
+    display: none;
+  }
+
+  .sidemenu-nav {
+    overflow-y: auto;
+    flex: 1;
+    padding: 10px 20px 20px;
+  }
+
+  .map {
+    height: 100vh;
+  }
+}
