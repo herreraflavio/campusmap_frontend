@@ -7,18 +7,20 @@
 
 :root {
   --menu-bg: rgba(255, 255, 255, 0.7);
+  --menu-item-bg: rgba(0,0,0,0.06);
   --text-color: #1d1d1f;
-  --hover-bg: rgba(0,0,0,0.06);
-  --active-bg: rgba(0,0,0,0.12);
+  --hover-bg: rgba(0,0,0,0.10);  
+  --active-bg: rgba(0,0,0,0.16);  
   --handle: #424242;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --menu-bg: rgba(30, 30, 30, 0.7);
+    --menu-item-bg: rgba(255,255,255,0.08);
     --text-color: #f5f5f7;
-    --hover-bg: rgba(255,255,255,0.08);
-    --active-bg: rgba(255,255,255,0.16);
+    --hover-bg: rgba(255,255,255,0.15);
+    --active-bg: rgba(255,255,255,0.22);
     --handle: #888;
   }
 }
@@ -100,16 +102,11 @@ h2 {
   padding: 10px;
   border-radius: 8px;
   color: var(--text-color);
-  /* transition: background 0.2s; */
 }
 
 .menu-toggle:hover {
   background: var(--hover-bg);
 }
-
-/* .sidemenu {
-  transition: width 0.25s ease;
-} */
 
 .sidemenu.collapsed {
   width: 70px;
@@ -137,7 +134,6 @@ h2 {
 
     transform: translateY(65vh);
 
-    overflow: hidden;
   }
 
   /* Drag handle */
@@ -154,15 +150,35 @@ h2 {
     transform: translateY(0);
   }
 
-  .sidemenu-head {
-    display: none;
-  }
+  /* .sidemenu-head {
+  display: none;
+} */
 
   .sidemenu-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+
     overflow-y: auto;
     flex: 1;
     padding: 10px 20px 20px;
   }
+
+  .sidemenu-nav a {
+  background: var(--menu-item-bg);
+  display: flex;
+}
+
+  .sidemenu-nav a:hover {
+  background: var(--hover-bg);
+}
+  .sidemenu-nav a:active {
+  background: var(--active-bg);
+}
+
+.sidemenu-nav a:last-child {
+  border-bottom: none;
+}
 
   .map {
     height: 100vh;
