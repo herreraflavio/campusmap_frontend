@@ -1,62 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>UC Merced Campus Events Map</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UC Merced Campus Events Map</title>
 
-  <link rel="stylesheet" href="events.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-</head>
-<body>
-  <div class="sidemenu">
-    <div class="sidemenu-head">
-      <h2>UCM MAPS</h2>
-      <i class="fa-solid fa-bars menu-toggle"></i>
+    <link rel="stylesheet" href="events.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div style="display: flex; flex-direction: row">
+      <div class="sidemenu">
+        <div class="sidemenu-head">
+          <h2>UCM MAPS</h2>
+          <i class="fa-solid fa-bars menu-toggle"></i>
+        </div>
+        <nav class="sidemenu-nav">
+          <a href="#" class="nav-home" onclick="renderSlide(1)">
+            <i class="fa-solid fa-house"></i>
+            <span>HOME</span>
+          </a>
+          <a href="#" class="nav-events" onclick="renderSlide(2)">
+            <i class="fa-solid fa-calendar"></i>
+            <span>EVENTS</span>
+          </a>
+          <a href="#" class="nav-gps" onclick="renderSlide(3)">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>MAP</span>
+          </a>
+          <a href="#" class="nav-about" onclick="renderSlide(4)">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>ABOUT</span>
+          </a>
+        </nav>
+        <div class="mobile-sheet">
+          <div class="mobile-sheet-header">
+            <button class="close-sheet" aria-label="Close menu">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="mobile-sheet-body">
+            <!-- Blank on purpose for now -->
+          </div>
+        </div>
+      </div>
+      <div id="slides">
+        <div class="slide">
+          <div
+            style="
+              height: 100%;
+              width: 100%;
+              background-color: rgba(255, 0, 0, 0.274);
+            "
+          >
+            home
+          </div>
+        </div>
+        <div class="slide">
+          <div
+            style="
+              height: 100%;
+              width: 100%;
+              background-color: rgba(0, 153, 255, 0.274);
+            "
+          >
+            events
+          </div>
+        </div>
+        <div class="slide active">
+          <iframe
+            class="map"
+            src="https://mapbuilder.ucmercedhub.com/share/69011d808d37778a2881c809"
+            loading="lazy"
+            allowfullscreen
+          >
+          </iframe>
+        </div>
+        <div class="slide">
+          <div
+            style="
+              height: 100%;
+              width: 100%;
+              background-color: rgba(0, 255, 81, 0.274);
+            "
+          >
+            about us
+          </div>
+        </div>
+      </div>
     </div>
 
-    <nav class="sidemenu-nav">
-      <a href="#" class="nav-home">
-        <i class="fa-solid fa-house"></i>
-        <span>HOME</span>
-      </a>
-
-      <a href="#" class="nav-events">
-        <i class="fa-solid fa-calendar"></i>
-        <span>EVENTS</span>
-      </a>
-
-      <a href="#" class="nav-gps">
-        <i class="fa-solid fa-location-dot"></i>
-        <span>MAP</span>
-      </a>
-
-      <a href="#" class="nav-about">
-        <i class="fa-solid fa-circle-info"></i>
-        <span>ABOUT</span>
-      </a>
-    </nav>
-
-    <div class="mobile-sheet">
-      <div class="mobile-sheet-header">
-        <button class="close-sheet" aria-label="Close menu">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="mobile-sheet-body">
-        <!-- Blank on purpose for now -->
-      </div>
-    </div>
-  </div>
-
-  <iframe
-    class="map"
-    src="https://mapbuilder.ucmercedhub.com/share/69011d808d37778a2881c809"
-    loading="lazy"
-    allowfullscreen>
-  </iframe>
-
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>

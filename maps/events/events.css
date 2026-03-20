@@ -9,7 +9,7 @@
   --menu-bg: rgba(255, 255, 255, 0.75);
   --menu-item-bg: rgba(0, 0, 0, 0.06);
   --text-color: #1d1d1f;
-  --hover-bg: rgba(0, 0, 0, 0.10);
+  --hover-bg: rgba(0, 0, 0, 0.1);
   --active-bg: rgba(0, 0, 0, 0.16);
 }
 
@@ -25,21 +25,23 @@
 
 body {
   overflow: hidden;
+  height: 100vh;
+  weight: 100vw;
 }
 
 .map {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   border: none;
 }
 
 /* Desktop sidebar */
 .sidemenu {
-  position: absolute;
-  top: 15%;
-  left: 2%;
+  position: relative;
+  top: 15px;
+  left: 15px;
   width: 250px;
-  height: 70vh;
+  height: 97vh;
   border-radius: 15px;
   background: var(--menu-bg);
   backdrop-filter: blur(10px);
@@ -212,7 +214,7 @@ body {
   }
 
   .sidemenu-nav a:active {
-    background: rgba(0, 0, 0, 0.10);
+    background: rgba(0, 0, 0, 0.1);
   }
 
   @media (prefers-color-scheme: dark) {
@@ -284,7 +286,9 @@ body {
     opacity: 0;
     pointer-events: none;
     transform: translateY(20px);
-    transition: opacity 0.28s ease, transform 0.28s ease;
+    transition:
+      opacity 0.28s ease,
+      transform 0.28s ease;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -321,7 +325,7 @@ body {
 
   @media (prefers-color-scheme: dark) {
     .close-sheet {
-      background: rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.1);
     }
   }
 
@@ -331,5 +335,42 @@ body {
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
+  }
+}
+
+/* Container for the slides to keep them stacked */
+#slides {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Base state for ALL slides (Hidden by default) */
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  padding-left: 115px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* Prevents clicking on hidden elements */
+  transition: opacity 0.2s ease; /* Adds a nice smooth crossfade */
+}
+
+/* State for the currently viewed slide */
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+@media (max-width: 47em) {
+  .slide {
+    padding: 15px;
   }
 }
