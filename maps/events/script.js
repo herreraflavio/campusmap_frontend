@@ -1,34 +1,39 @@
 const toggle = document.querySelector(".menu-toggle");
 const sidemenu = document.querySelector(".sidemenu");
+const homeButton = document.querySelector(".nav-home");
+const closeSheet = document.querySelector(".close-sheet");
+
 let wasCollapsed = false;
 let resizeTimer;
 
-// Desktop
 toggle.addEventListener("click", (e) => {
+  if (window.innerWidth <= 752) return;
   e.stopPropagation();
   sidemenu.classList.toggle("collapsed");
   wasCollapsed = sidemenu.classList.contains("collapsed");
 });
 
-// Mobile
-sidemenu.addEventListener("click", () => {
+homeButton.addEventListener("click", (e) => {
   if (window.innerWidth <= 752) {
-    sidemenu.classList.toggle("active");
+    e.preventDefault();
+    sidemenu.classList.add("sheet-open");
   }
 });
 
-// Resize
+closeSheet.addEventListener("click", () => {
+  sidemenu.classList.remove("sheet-open");
+});
+
 function handleResize() {
-  // Disable transitions immediately
   sidemenu.classList.add("no-transition");
 
   if (window.innerWidth <= 752) {
     sidemenu.classList.remove("collapsed");
   } else {
+    sidemenu.classList.remove("sheet-open");
     sidemenu.classList.toggle("collapsed", wasCollapsed);
   }
 
-  // Re-enable transitions after a short delay
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     sidemenu.classList.remove("no-transition");

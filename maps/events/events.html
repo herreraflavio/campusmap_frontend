@@ -3,13 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UC Merced Campus Events Map</title>
+
   <link rel="stylesheet" href="events.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <title>UC Merced Campus Events Map</title>
 </head>
-
 <body>
-  <!-- Sidemenu -->
   <div class="sidemenu">
     <div class="sidemenu-head">
       <h2>UCM MAPS</h2>
@@ -17,17 +16,47 @@
     </div>
 
     <nav class="sidemenu-nav">
-  <a href="#"><i class="fa-solid fa-house"></i><span>HOME</span></a>
-  <a href="#"><i class="fa-solid fa-calendar"></i><span>EVENTS</span></a>
-  <a href="#"><i class="fa-solid fa-location-dot"></i><span>GPS</span></a>
-  <a href="#"><i class="fa-solid fa-map"></i><span>MAPS</span></a>
-  <a href="#"><i class="fa-solid fa-circle-info"></i><span>ABOUT</span></a>
-</nav>
+      <a href="#" class="nav-home">
+        <i class="fa-solid fa-house"></i>
+        <span>HOME</span>
+      </a>
+
+      <a href="#" class="nav-events">
+        <i class="fa-solid fa-calendar"></i>
+        <span>EVENTS</span>
+      </a>
+
+      <a href="#" class="nav-gps">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>GPS</span>
+      </a>
+
+      <a href="#" class="nav-about">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>ABOUT</span>
+      </a>
+    </nav>
+
+    <div class="mobile-sheet">
+      <div class="mobile-sheet-header">
+        <button class="close-sheet" aria-label="Close menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="mobile-sheet-body">
+        <!-- Blank on purpose for now -->
+      </div>
+    </div>
   </div>
 
-  <iframe 
-    class="map" src="https://mapbuilder.ucmercedhub.com/share/69011d808d37778a2881c809" loading="lazy" allowfullscreen>
+  <iframe
+    class="map"
+    src="https://mapbuilder.ucmercedhub.com/share/69011d808d37778a2881c809"
+    loading="lazy"
+    allowfullscreen>
   </iframe>
+
   <script src="script.js"></script>
 </body>
 </html>
