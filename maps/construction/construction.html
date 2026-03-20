@@ -510,7 +510,7 @@
         let index = 0;
         const imgElems = images.map((src, i) => {
           const img = document.createElement("img");
-          img.src ="maps/construction/"+ src;
+          img.src ="/maps/construction/"+ src;
           img.alt = `${id}-slide-${i}`;
           if (i === 0) img.classList.add("active");
           container.appendChild(img);
