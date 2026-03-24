@@ -13,17 +13,6 @@ toggle.addEventListener("click", (e) => {
   wasCollapsed = sidemenu.classList.contains("collapsed");
 });
 
-homeButton.addEventListener("click", (e) => {
-  if (window.innerWidth <= 752) {
-    e.preventDefault();
-    sidemenu.classList.add("sheet-open");
-  }
-});
-
-closeSheet.addEventListener("click", () => {
-  sidemenu.classList.remove("sheet-open");
-});
-
 function handleResize() {
   sidemenu.classList.add("no-transition");
 
