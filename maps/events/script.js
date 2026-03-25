@@ -1,7 +1,5 @@
 const toggle = document.querySelector(".menu-toggle");
 const sidemenu = document.querySelector(".sidemenu");
-const homeButton = document.querySelector(".nav-home");
-const closeSheet = document.querySelector(".close-sheet");
 
 let wasCollapsed = false;
 let resizeTimer;
@@ -19,7 +17,6 @@ function handleResize() {
   if (window.innerWidth <= 752) {
     sidemenu.classList.remove("collapsed");
   } else {
-    sidemenu.classList.remove("sheet-open");
     sidemenu.classList.toggle("collapsed", wasCollapsed);
   }
 
